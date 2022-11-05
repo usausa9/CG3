@@ -65,11 +65,6 @@ private: // メンバ変数
 	Sprite* sprite2 = nullptr;
 	/*Sprite* sprite3 = nullptr;*/
 
-	Object3d* object3d[50] = { nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
-
-	XMFLOAT3 objPosition[50];
-
-	float randX = 0;
-	float randZ = 0;
+	Object3d* object3d = nullptr;
 };
 
