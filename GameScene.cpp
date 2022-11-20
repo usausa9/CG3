@@ -44,14 +44,15 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	// 3Dオブジェクト生成
 	particleMan = ParticleManager::Create();
 	particleMan->Update();
+
+	particleMan2 = ParticleManager2::Create();
+	particleMan2->Update();
 	
 	// 座標0,0にテクスチャ2番のsprite生成
 	sprite1 = Sprite::Create(2, { 0,0 });
 
 	// 座標500,500にテクスチャ2番のsprite生成
 	sprite2 = Sprite::Create(2, { 500,500 }, { 1,0,0,1 }, { 0,0 }, false, true);
-
-	
 }
 
 void GameScene::Update()
@@ -78,10 +79,22 @@ void GameScene::Update()
 	// カメラ移動
 	if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
 	{
-		if (input->PushKey(DIK_W)) { ParticleManager::CameraMoveEyeVector({ 0.0f,+1.0f,0.0f }); }
-		else if (input->PushKey(DIK_S)) { ParticleManager::CameraMoveEyeVector({ 0.0f,-1.0f,0.0f }); }
-		if (input->PushKey(DIK_D)) { ParticleManager::CameraMoveEyeVector({ +1.0f,0.0f,0.0f }); }
-		else if (input->PushKey(DIK_A)) { ParticleManager::CameraMoveEyeVector({ -1.0f,0.0f,0.0f }); }
+		if (input->PushKey(DIK_W)) { 
+			ParticleManager::CameraMoveEyeVector({ 0.0f,+1.0f,0.0f });
+			ParticleManager2::CameraMoveEyeVector({ 0.0f,+1.0f,0.0f });
+		}
+		else if (input->PushKey(DIK_S)) { 
+			ParticleManager::CameraMoveEyeVector({ 0.0f,-1.0f,0.0f }); 
+			ParticleManager2::CameraMoveEyeVector({ 0.0f,-1.0f,0.0f });
+		}
+		if (input->PushKey(DIK_D)) { 
+			ParticleManager::CameraMoveEyeVector({ +1.0f,0.0f,0.0f }); 
+			ParticleManager2::CameraMoveEyeVector({ +1.0f,0.0f,0.0f });
+		}
+		else if (input->PushKey(DIK_A)) { 
+			ParticleManager::CameraMoveEyeVector({ -1.0f,0.0f,0.0f }); 
+			ParticleManager2::CameraMoveEyeVector({ -1.0f,0.0f,0.0f });
+		}
 	} 
 
 	// スペースキーを押していたら
@@ -94,10 +107,10 @@ void GameScene::Update()
 		sprite1->SetPosition(position);
 	}
 
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 15; i++) {
 		const float rnd_pos = 10.0f;
 		XMFLOAT3 pos{};
-		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f -10.0f;
 		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 		pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
 
@@ -111,10 +124,31 @@ void GameScene::Update()
 		const float rnd_acc = 0.001f;
 		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
 
-		particleMan->Add(60, pos, vel, acc);
+		particleMan->Add(60, pos, vel, acc, 1.0f, 0.0f);
+	}
+
+	for (int i = 0; i < 15; i++) {
+		const float rnd_pos = 10.0f;
+		XMFLOAT3 pos{};
+		pos.x = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f + 10.0f;
+		pos.y = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+		pos.z = (float)rand() / RAND_MAX * rnd_pos - rnd_pos / 2.0f;
+
+		const float rnd_vel = 0.1f;
+		XMFLOAT3 vel{};
+		vel.x = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.y = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+		vel.z = (float)rand() / RAND_MAX * rnd_vel - rnd_vel / 2.0f;
+
+		XMFLOAT3 acc{};
+		const float rnd_acc = 0.001f;
+		acc.y = -(float)rand() / RAND_MAX * rnd_acc;
+
+		particleMan2->Add(60, pos, vel, acc, 1.0f, 0.0f);
 	}
 
 	particleMan->Update();
+	particleMan2->Update();
 }
 
 void GameScene::Draw()
@@ -142,10 +176,11 @@ void GameScene::Draw()
 #pragma region 3Dオブジェクト描画
 	// 3Dオブジェクト描画前処理
 	ParticleManager::PreDraw(cmdList);
+	ParticleManager2::PreDraw(cmdList);
 
 	// 3Dオブクジェクトの描画
 	particleMan->Draw();
-	
+	particleMan2->Draw();
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
@@ -153,6 +188,7 @@ void GameScene::Draw()
 
 	// 3Dオブジェクト描画後処理
 	ParticleManager::PostDraw();
+	ParticleManager2::PostDraw();
 #pragma endregion
 
 #pragma region 前景スプライト描画
